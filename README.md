@@ -1,47 +1,58 @@
 # Baustellen Tycoon
 
-**Baustellen Tycoon** ist ein mobile-first Tycoon-/Idle-Spiel ohne Frontend-Buildschritt. Der Spieler startet als kleiner Bauunternehmer, nimmt Aufträge an, beobachtet den Baufortschritt und baut Fuhrpark, Maschinenbestand und Firmengelände aus.
+**Baustellen Tycoon** ist ein mobile-first Tycoon-/Idle-Spiel. Der Spieler startet als kleiner Bauunternehmer, nimmt Aufträge an, beobachtet den Baufortschritt und baut Fuhrpark, Maschinenbestand und Firmengelände aus.
 
 ## Technik
 
 - Vanilla HTML, CSS und JavaScript mit ES Modules
 - Progressive Web App mit Offline-App-Shell
 - IndexedDB für den sofortigen lokalen Spielstand
-- Cloudflare Pages Functions und D1 als optionale Cloud-Kopie
+- Cloudflare Worker mit Static Assets
+- Cloudflare D1 als optionale Cloud-Kopie
 - Gast-Session ohne Login; Tokens werden serverseitig nur als SHA-256-Hash gespeichert
+- Kein Frontend-Buildschritt und keine Node-Runtime für die Anwendung
 
 ## Projektstruktur
 
 - `public/` – vollständige statische PWA
 - `public/js/` – Spielkern, Wirtschaft, Speicherung, API und Oberfläche
-- `functions/api/` – Cloudflare Pages Functions
+- `worker/index.js` – API-Routing, Gast-Session und D1-Speicherung
 - `schema.sql` – D1-Schema
-- `wrangler.jsonc` – Cloudflare-Konfiguration
+- `wrangler.jsonc` – Worker-, Asset- und Binding-Konfiguration
 
-## Cloudflare Pages
+## Cloudflare Worker bereitstellen
 
-1. Dieses GitHub-Repository in Cloudflare Pages verbinden.
-2. Production Branch: `main`
-3. Framework Preset: `None`
-4. Build Command: leer lassen oder `exit 0`
-5. Build Output Directory: `public`
+Das Repository kann direkt über **Workers Builds** mit Cloudflare verbunden werden.
 
-Bei einer normalen Pages-Git-Integration ist kein eigener Deploy-Befehl nötig. Falls die verwendete Cloudflare-Oberfläche ausdrücklich einen **Deploy command** verlangt, muss dort stehen:
+### Einstellungen
 
-```bash
-npx wrangler pages deploy public --project-name=baustellentycoon --branch=main
-```
+- Repository: `knodelt/Baustelle`
+- Projektname: `baustelle`
+- Produktionsbranch: `main`
+- Build-Befehl: leer
+- Bereitstellungsbefehl: `npx wrangler deploy`
+- Bereitstellungsbefehl für Nicht-Produktions-Branches: `npx wrangler versions upload`
+- Pfad: `/`
 
-Nicht `npx wrangler deploy` verwenden. Dieser Befehl ist für Cloudflare Workers gedacht und kann ein Pages-Projekt nicht korrekt veröffentlichen.
+Der Worker veröffentlicht die Dateien aus `public/` als Static Assets. Nur Aufrufe unter `/api/*` werden zuerst vom Worker verarbeitet. Alle anderen Anfragen werden ohne Worker-Aufruf als statische Dateien ausgeliefert.
 
-Cloudflare veröffentlicht jeden neuen Commit auf `main` automatisch. Die Pages Functions unter `functions/` werden dabei gemeinsam mit der statischen Anwendung bereitgestellt.
+Die erste Bereitstellung funktioniert auch ohne D1. In diesem Zustand spielt und speichert die App vollständig lokal auf dem Gerät.
 
 ## D1 einrichten
 
 1. Eine D1-Datenbank mit dem Namen `baustellentycoon-db` erstellen.
-2. Das Binding `DB` mit dieser Datenbank verbinden.
-3. `schema.sql` auf die Datenbank anwenden.
-4. Nach dem ersten erfolgreichen Pages-Deploy den folgenden Block mit der echten Datenbank-ID in `wrangler.jsonc` ergänzen:
+2. `schema.sql` auf die Datenbank anwenden.
+3. Das Binding `DB` in `wrangler.jsonc` mit der echten Datenbank-ID ergänzen.
+4. Den Worker erneut bereitstellen.
+
+Beispiel:
+
+```bash
+npx wrangler d1 create baustellentycoon-db
+npx wrangler d1 execute baustellentycoon-db --remote --file=schema.sql
+```
+
+Der von Cloudflare ausgegebene Binding-Block wird in `wrangler.jsonc` eingefügt. Er sieht grundsätzlich so aus:
 
 ```jsonc
 "d1_databases": [
@@ -53,24 +64,21 @@ Cloudflare veröffentlicht jeden neuen Commit auf `main` automatisch. Die Pages 
 ]
 ```
 
-Beispiel mit Wrangler:
-
-```bash
-npx wrangler d1 create baustellentycoon-db
-npx wrangler d1 execute baustellentycoon-db --remote --file=schema.sql
-```
-
-Die Anwendung bleibt auch ohne erreichbare D1-Verbindung lokal spielbar und synchronisiert später erneut.
+Keine erfundene oder beispielhafte ID in der produktiven Konfiguration verwenden.
 
 ## Lokale Entwicklung
 
-Für die statische Oberfläche genügt ein lokaler Webserver im Projektordner, zum Beispiel:
+Die komplette Anwendung einschließlich Worker-API und lokaler D1-Emulation startet mit:
+
+```bash
+npx wrangler dev
+```
+
+Für eine rein statische Oberflächenprüfung genügt weiterhin:
 
 ```bash
 python3 -m http.server 8080 --directory public
 ```
-
-Pages Functions und D1 können optional über Wrangler getestet werden. Die eigentliche Anwendung benötigt zur Laufzeit weder Node noch ein Frontend-Framework.
 
 ## Version
 

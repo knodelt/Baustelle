@@ -1,8 +1,18 @@
 {
   "$schema": "node_modules/wrangler/config-schema.json",
-  "name": "baustellentycoon",
+  "name": "baustelle",
   "compatibility_date": "2026-08-31",
-  "pages_build_output_dir": "./public"
+  "main": "./worker/index.js",
+  "minify": true,
+  "assets": {
+    "directory": "./public",
+    "binding": "ASSETS",
+    "not_found_handling": "single-page-application",
+    "run_worker_first": ["/api/*"]
+  },
+  "observability": {
+    "enabled": true
+  }
 
   // D1 wird ergänzt, sobald die echte database_id vorhanden ist.
   // Ein Platzhalter würde den ersten Cloudflare-Deploy blockieren.
