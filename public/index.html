@@ -1,0 +1,315 @@
+<!doctype html>
+<html lang="de" data-theme="dark">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#17191c">
+  <meta name="description" content="Baue dein eigenes Bauunternehmen auf – Auftrag für Auftrag.">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <link rel="manifest" href="/manifest.webmanifest">
+  <link rel="icon" href="/assets/icons/icon-192.png">
+  <link rel="apple-touch-icon" href="/assets/icons/icon-192.png">
+  <link rel="stylesheet" href="/styles.css">
+  <title>Baustellen Tycoon</title>
+</head>
+<body>
+  <svg class="svg-defs" aria-hidden="true">
+    <symbol id="i-site" viewBox="0 0 24 24"><path d="M3 20h18M5 20v-7l7-7 7 7v7M9 20v-5h6v5M4 9l8-6 8 6"/></symbol>
+    <symbol id="i-jobs" viewBox="0 0 24 24"><path d="M8 6V4h8v2M5 6h14a2 2 0 0 1 2 2v10a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2Z"/><path d="M3 12h18M9 12v2h6v-2"/></symbol>
+    <symbol id="i-company" viewBox="0 0 24 24"><path d="M4 21V8l8-4v17M12 10l8-3v14M7 11h2M7 15h2M7 19h2M15 11h2M15 15h2M15 19h2M2 21h20"/></symbol>
+    <symbol id="i-shop" viewBox="0 0 24 24"><path d="M3 9h18l-1-5H4L3 9Z"/><path d="M5 9v11h14V9M9 20v-6h6v6M3 9c0 2 3 3 4.5 0 1.5 3 4.5 2 4.5 0 0 2 3 3 4.5 0 1.5 3 4.5 2 4.5 0"/></symbol>
+    <symbol id="i-more" viewBox="0 0 24 24"><circle cx="5" cy="12" r="1.5"/><circle cx="12" cy="12" r="1.5"/><circle cx="19" cy="12" r="1.5"/></symbol>
+    <symbol id="i-close" viewBox="0 0 24 24"><path d="m6 6 12 12M18 6 6 18"/></symbol>
+    <symbol id="i-arrow" viewBox="0 0 24 24"><path d="m9 5 7 7-7 7"/></symbol>
+    <symbol id="i-check" viewBox="0 0 24 24"><path d="m5 12 4 4L19 6"/></symbol>
+    <symbol id="i-lock" viewBox="0 0 24 24"><rect x="5" y="10" width="14" height="11" rx="2"/><path d="M8 10V7a4 4 0 0 1 8 0v3"/></symbol>
+    <symbol id="i-wrench" viewBox="0 0 24 24"><path d="M14 7a5 5 0 0 0-6.5-4.8l3 3-3.3 3.3-3-3A5 5 0 0 0 10 12l8.5 8.5 2-2L12 10a5 5 0 0 0 2-3Z"/></symbol>
+    <symbol id="i-cloud" viewBox="0 0 24 24"><path d="M7 19h11a4 4 0 0 0 .7-7.9A7 7 0 0 0 5.2 9 5 5 0 0 0 7 19Z"/><path d="m9 14 3 3 4-5"/></symbol>
+    <symbol id="i-chart" viewBox="0 0 24 24"><path d="M4 20V10M10 20V4M16 20v-7M22 20H2"/></symbol>
+  </svg>
+
+  <div id="boot-screen" class="boot-screen">
+    <div class="boot-mark" aria-hidden="true"><span></span><span></span><span></span></div>
+    <p>BAUSTELLEN TYCOON</p>
+    <small>Bauhof wird geöffnet …</small>
+  </div>
+
+  <div id="app" class="app" hidden>
+    <header class="topbar">
+      <button class="brand" type="button" data-nav="site" aria-label="Zur Baustelle">
+        <span class="brand-mark" aria-hidden="true"><i></i><i></i><i></i></span>
+        <span><strong>BAUSTELLEN</strong><small>TYCOON</small></span>
+      </button>
+      <div class="top-metrics">
+        <div class="money-metric">
+          <span>Firmenkonto</span>
+          <strong id="header-balance">100.000 €</strong>
+        </div>
+        <button class="level-metric" type="button" data-nav="company" aria-label="Unternehmer-Level anzeigen">
+          <span class="level-number" id="header-level">1</span>
+          <span class="level-copy"><small>LEVEL</small><b id="header-xp">0 / 250 XP</b></span>
+          <span class="level-track"><i id="header-xp-bar"></i></span>
+        </button>
+      </div>
+      <div class="connection" id="connection-status" title="Cloud-Synchronisierung">
+        <span></span><b>LOKAL</b>
+      </div>
+    </header>
+
+    <div class="shell">
+      <aside class="desktop-nav" aria-label="Hauptnavigation">
+        <div class="nav-section-label">LEITSTAND</div>
+        <button class="nav-button is-active" type="button" data-nav="site"><svg><use href="#i-site"></use></svg><span>Baustelle</span></button>
+        <button class="nav-button" type="button" data-nav="jobs"><svg><use href="#i-jobs"></use></svg><span>Aufträge</span><b id="desktop-job-count">4</b></button>
+        <button class="nav-button" type="button" data-nav="company"><svg><use href="#i-company"></use></svg><span>Firma</span></button>
+        <button class="nav-button" type="button" data-nav="shop"><svg><use href="#i-shop"></use></svg><span>Beschaffung</span></button>
+        <button class="nav-button" type="button" data-nav="more"><svg><use href="#i-more"></use></svg><span>Mehr</span></button>
+        <div class="side-company-card">
+          <small>DEIN UNTERNEHMEN</small>
+          <strong id="side-company-name">Knodel Bauunternehmung</strong>
+          <span><i></i><span id="side-yard-name">Kleiner Bauhof</span></span>
+        </div>
+        <p class="version-label">VERSION 1.0.0</p>
+      </aside>
+
+      <main id="main-content" class="main-content">
+        <section id="view-site" class="view is-active" data-view="site" aria-labelledby="site-title">
+          <div class="view-heading site-heading">
+            <div>
+              <p class="eyebrow"><span></span> LIVE-LEITSTAND</p>
+              <h1 id="site-title">Deine Baustelle</h1>
+            </div>
+            <div class="weather-chip" aria-label="Baustellenwetter: trocken, 18 Grad"><span class="sun-icon"></span><b>18°</b><small>TROCKEN</small></div>
+          </div>
+
+          <div class="site-dashboard">
+            <article class="construction-stage" id="construction-stage" data-status="idle" data-scene="earth">
+              <div class="stage-topline">
+                <span class="live-badge"><i></i> LIVE</span>
+                <span id="stage-location">BAUFELD 01 · SÜDHANG</span>
+              </div>
+              <svg class="site-scene" viewBox="0 0 960 520" preserveAspectRatio="xMidYMid slice" role="img" aria-labelledby="scene-title scene-desc">
+                <title id="scene-title">Lebendige Baustelle</title>
+                <desc id="scene-desc">Bauhof mit Bagger, LKW, Kran, Baucontainer und Materialstapeln.</desc>
+                <defs>
+                  <linearGradient id="sky" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#2c3339"/><stop offset="1" stop-color="#171b1f"/></linearGradient>
+                  <linearGradient id="ground" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#73543b"/><stop offset="1" stop-color="#3f3329"/></linearGradient>
+                  <linearGradient id="machine-yellow" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#ffd449"/><stop offset="1" stop-color="#df8d00"/></linearGradient>
+                  <linearGradient id="metal" x1="0" y1="0" x2="0" y2="1"><stop stop-color="#8d979e"/><stop offset="1" stop-color="#4c555c"/></linearGradient>
+                  <pattern id="ground-lines" width="32" height="32" patternUnits="userSpaceOnUse" patternTransform="skewX(-25)"><path d="M0 31h32" stroke="#b28255" stroke-opacity=".12"/></pattern>
+                  <filter id="shadow" x="-40%" y="-40%" width="180%" height="180%"><feDropShadow dx="0" dy="10" stdDeviation="9" flood-color="#050607" flood-opacity=".42"/></filter>
+                </defs>
+                <rect width="960" height="520" fill="url(#sky)"/>
+                <g class="distant-site" opacity=".34">
+                  <path d="M0 220h960v76H0z" fill="#20262b"/>
+                  <path d="M46 220v-78h112v78M67 142v-35h70v35M790 220v-92h105v92" fill="#171c20"/>
+                  <path d="M270 220v-94h8v94m4-83h165v7H282m154 0-31 22M635 220v-138h7v138m4-122h136v6H646" fill="#596168"/>
+                </g>
+                <path d="M0 272 555 198l405 94v228H0Z" fill="url(#ground)"/>
+                <path d="M0 272 555 198l405 94v228H0Z" fill="url(#ground-lines)"/>
+                <path d="m-30 445 496-98 527 69v104H-30Z" fill="#373b3e"/>
+                <path d="m-30 456 496-96 527 66" fill="none" stroke="#62686c" stroke-width="3" stroke-dasharray="22 20" opacity=".55"/>
+
+                <g class="site-fence" opacity=".9">
+                  <path d="m25 302 362-58M25 320l362-58M25 302v48m72-60v48m72-60v48m72-60v48m72-60v48m72-60v48" fill="none" stroke="#b8bdc0" stroke-width="4"/>
+                  <path d="M25 302v18l362-58v-18Z" fill="#f5b300" opacity=".76"/>
+                </g>
+
+                <g class="crane" filter="url(#shadow)">
+                  <path d="M714 270V72h13v198" fill="#d88a00"/>
+                  <path d="m688 270 32-198 33 198" fill="none" stroke="#f2aa12" stroke-width="8"/>
+                  <path d="M676 78h191v10H676Z" fill="#f2aa12"/>
+                  <path d="m714 82-37 35m51-35 37 35m-37 0 38-35m-38 70 78-70" fill="none" stroke="#b36f00" stroke-width="4"/>
+                  <path d="M805 84v100" stroke="#c5cbcf" stroke-width="2"/>
+                  <path d="M795 181h20v25h-20z" fill="#687178"/>
+                </g>
+
+                <g class="container" transform="translate(666 250)" filter="url(#shadow)">
+                  <path d="M0 22 127 0l70 30-126 25Z" fill="#cbd0d3"/>
+                  <path d="M0 22v75l71 30V55Z" fill="#959da2"/>
+                  <path d="M71 55v72l126-24V30Z" fill="#b7bdc0"/>
+                  <path d="M86 62v49l45-9V53Z" fill="#29333a"/>
+                  <path d="M145 48v49l35-7V41Z" fill="#66747c"/>
+                  <path d="M9 42v8l50 21v-9zm0 20v8l50 21v-9" fill="#f2ab13"/>
+                </g>
+
+                <g class="material-stack" transform="translate(540 330)" filter="url(#shadow)">
+                  <path d="m0 33 70-18 55 20-70 20Z" fill="#858b8f"/>
+                  <path d="m8 23 62-16 46 17-62 18Z" fill="#a3a8ab"/>
+                  <path d="m19 14 50-13 35 13-50 14Z" fill="#c2c5c7"/>
+                </g>
+
+                <g class="progress-build" aria-hidden="true">
+                  <path class="build-step step-one" d="m330 308 193-45 118 41-196 50Z" fill="#b9b5a9" stroke="#d0cdc4" stroke-width="3"/>
+                  <path class="build-step step-two" d="m359 299 139-32 91 31-141 36Z" fill="#7e878c" stroke="#bfc5c8" stroke-width="8"/>
+                  <path class="build-step step-three" d="M384 289v-41l18-4v40m139 5v-40l18 6v39M402 248l94-22 63 21" fill="none" stroke="#aeb6bb" stroke-width="8"/>
+                </g>
+
+                <g class="excavator" transform="translate(210 278)" filter="url(#shadow)">
+                  <g class="excavator-arm">
+                    <path d="M96 59 156-8l17 8-48 80Z" fill="url(#machine-yellow)"/>
+                    <path d="m159-2 66 65-11 12-60-50Z" fill="#e99a05"/>
+                    <path d="m213 62 34 15-9 29-36-8Z" fill="#6f7578"/>
+                    <path d="m106 56 49-57" stroke="#343b40" stroke-width="5"/>
+                  </g>
+                  <path d="M44 54h91l27 59H53Z" fill="url(#machine-yellow)"/>
+                  <path d="M68 48h49l23 49H84Z" fill="#25343c" stroke="#8da0aa" stroke-width="3"/>
+                  <path d="M51 114h122l18 25H37Z" fill="#343a3e"/>
+                  <path d="M31 138h168c14 0 24 9 24 20s-10 20-24 20H31c-14 0-24-9-24-20s10-20 24-20Z" fill="#23282b" stroke="#596064" stroke-width="5"/>
+                  <path d="M38 149h151" stroke="#777f84" stroke-width="13" stroke-dasharray="15 9"/>
+                  <circle cx="153" cy="108" r="8" fill="#252a2e"/>
+                </g>
+
+                <g class="truck" transform="translate(48 361)" filter="url(#shadow)">
+                  <path d="M0 0h154l22 64H24Z" fill="#b8bec1"/>
+                  <path d="M154 22h72l42 48H176Z" fill="url(#machine-yellow)"/>
+                  <path d="M180 30h39l23 27h-54Z" fill="#293942"/>
+                  <path d="M15 65h255v25H15Z" fill="#32383c"/>
+                  <circle cx="64" cy="90" r="24" fill="#1a1e20" stroke="#62696d" stroke-width="8"/>
+                  <circle cx="214" cy="90" r="24" fill="#1a1e20" stroke="#62696d" stroke-width="8"/>
+                  <path d="M14 10h128l14 39H26Z" fill="#7f898f"/>
+                </g>
+
+                <g class="dust" fill="#d4b48d">
+                  <circle cx="190" cy="438" r="8"/><circle cx="170" cy="430" r="5"/><circle cx="153" cy="438" r="11"/>
+                </g>
+                <g class="hazard-marker" transform="translate(850 378)">
+                  <path d="m0 54 21-54 21 54Z" fill="#ed9e08"/><path d="M10 31h22" stroke="#24282b" stroke-width="6"/>
+                </g>
+              </svg>
+
+              <div class="stage-overlay idle-copy" id="stage-idle-copy">
+                <span class="stage-kicker">BAUFELD FREI</span>
+                <h2>Bereit für den nächsten Auftrag.</h2>
+                <p>Dein Minibagger ist startklar. Die ersten Angebote liegen bereits vor.</p>
+                <button class="primary-action" type="button" data-nav="jobs">Auftrag auswählen <svg><use href="#i-arrow"></use></svg></button>
+              </div>
+
+              <div class="active-job-panel" id="active-job-panel" hidden>
+                <div class="job-panel-head"><span><i></i> IN ARBEIT</span><b id="active-job-type">ERDARBEITEN</b></div>
+                <h2 id="active-job-name">Garten ausheben</h2>
+                <p id="active-job-client">Familie Schneider</p>
+                <div class="big-progress"><i id="active-job-bar"></i></div>
+                <div class="progress-meta"><strong id="active-job-progress">0 %</strong><span>Restzeit <b id="active-job-time">00:45</b></span></div>
+              </div>
+            </article>
+
+            <aside class="command-rail">
+              <article class="rail-card capacity-card">
+                <div class="rail-label"><span>BAUSTELLENKAPAZITÄT</span><b id="capacity-label">0 / 1</b></div>
+                <div class="capacity-slots" id="capacity-slots"><span></span></div>
+              </article>
+              <article class="rail-card next-contract-card">
+                <div class="rail-label"><span>NÄCHSTES ANGEBOT</span><b>NEU</b></div>
+                <div id="quick-job"></div>
+              </article>
+              <article class="rail-card company-pulse">
+                <div class="rail-label"><span>FIRMENSTATUS</span><b class="positive">STABIL</b></div>
+                <dl>
+                  <div><dt>Reputation</dt><dd id="rail-reputation">8 / 100</dd></div>
+                  <div><dt>Aufträge erledigt</dt><dd id="rail-completed">0</dd></div>
+                  <div><dt>Gesamtgewinn</dt><dd id="rail-profit">0 €</dd></div>
+                </dl>
+              </article>
+            </aside>
+          </div>
+        </section>
+
+        <section id="view-jobs" class="view" data-view="jobs" aria-labelledby="jobs-title">
+          <div class="view-heading">
+            <div><p class="eyebrow"><span></span> AUFTRAGSMARKT</p><h1 id="jobs-title">Neue Aufträge</h1><p>Wähle eine Baustelle, die zu deinem Fuhrpark passt.</p></div>
+            <button class="secondary-action" id="refresh-jobs" type="button">Angebote aktualisieren</button>
+          </div>
+          <div class="filter-row" id="job-filter" role="group" aria-label="Aufträge filtern">
+            <button class="filter-chip is-active" type="button" data-filter="all">Alle</button>
+            <button class="filter-chip" type="button" data-filter="ready">Startklar</button>
+            <button class="filter-chip" type="button" data-filter="locked">Fehlt etwas</button>
+          </div>
+          <div class="job-grid" id="job-grid"></div>
+        </section>
+
+        <section id="view-company" class="view" data-view="company" aria-labelledby="company-title">
+          <div class="view-heading">
+            <div><p class="eyebrow"><span></span> UNTERNEHMEN</p><h1 id="company-title">Deine Firma</h1><p>Fuhrpark, Maschinen und Betriebsgelände auf einen Blick.</p></div>
+          </div>
+          <div class="company-summary" id="company-summary"></div>
+          <div class="section-head"><div><span>BETRIEBSMITTEL</span><h2>Fuhrpark & Maschinen</h2></div></div>
+          <div class="asset-list" id="asset-list"></div>
+        </section>
+
+        <section id="view-shop" class="view" data-view="shop" aria-labelledby="shop-title">
+          <div class="view-heading">
+            <div><p class="eyebrow"><span></span> BESCHAFFUNG</p><h1 id="shop-title">Investiere in Wachstum</h1><p>Maschinen, Fahrzeuge und Baustoffe direkt für den nächsten Einsatz.</p></div>
+          </div>
+          <div class="shop-tabs" id="shop-tabs" role="tablist" aria-label="Beschaffungskategorien">
+            <button class="is-active" type="button" data-shop="machines" role="tab">Maschinen</button>
+            <button type="button" data-shop="vehicles" role="tab">Fahrzeuge</button>
+            <button type="button" data-shop="materials" role="tab">Baustoffe</button>
+          </div>
+          <div class="shop-grid" id="shop-grid"></div>
+        </section>
+
+        <section id="view-more" class="view" data-view="more" aria-labelledby="more-title">
+          <div class="view-heading"><div><p class="eyebrow"><span></span> ZENTRALE</p><h1 id="more-title">Mehr</h1><p>Historie, Einstellungen und Spielstand.</p></div></div>
+          <div class="more-layout">
+            <article class="settings-panel">
+              <div class="section-head"><div><span>SPIELEINSTELLUNGEN</span><h2>So spielt es sich für dich</h2></div></div>
+              <div class="settings-list">
+                <label><span><b>Sound</b><small>Dezente Rückmeldungen und Maschinenatmosphäre</small></span><input type="checkbox" id="setting-sound"><i></i></label>
+                <label><span><b>Vibration</b><small>Leichtes haptisches Feedback auf Smartphones</small></span><input type="checkbox" id="setting-vibration"><i></i></label>
+                <label><span><b>Ereignisse</b><small>Gelegentliche Chancen und Baustellenmeldungen</small></span><input type="checkbox" id="setting-events"><i></i></label>
+                <label class="select-setting"><span><b>Darstellung</b><small>Dunkel, hell oder passend zu deinem Gerät</small></span><select id="setting-theme" aria-label="Darstellung"><option value="dark">Dunkel</option><option value="light">Hell</option><option value="system">System</option></select></label>
+              </div>
+              <div class="settings-actions">
+                <button class="secondary-action" id="sync-now" type="button"><svg><use href="#i-cloud"></use></svg> Jetzt synchronisieren</button>
+                <button class="danger-action" id="reset-game" type="button">Spielstand zurücksetzen</button>
+              </div>
+            </article>
+            <article class="history-panel">
+              <div class="section-head"><div><span>BAUTAGEBUCH</span><h2>Letzte Ereignisse</h2></div></div>
+              <div class="history-list" id="history-list"></div>
+            </article>
+          </div>
+        </section>
+      </main>
+    </div>
+
+    <nav class="mobile-nav" aria-label="Hauptnavigation">
+      <button class="is-active" type="button" data-nav="site"><svg><use href="#i-site"></use></svg><span>Baustelle</span></button>
+      <button type="button" data-nav="jobs"><span class="nav-icon-wrap"><svg><use href="#i-jobs"></use></svg><b id="mobile-job-count">4</b></span><span>Aufträge</span></button>
+      <button type="button" data-nav="company"><svg><use href="#i-company"></use></svg><span>Firma</span></button>
+      <button type="button" data-nav="shop"><svg><use href="#i-shop"></use></svg><span>Shop</span></button>
+      <button type="button" data-nav="more"><svg><use href="#i-more"></use></svg><span>Mehr</span></button>
+    </nav>
+  </div>
+
+  <dialog class="bottom-sheet" id="detail-sheet" aria-labelledby="sheet-title">
+    <div class="sheet-handle" aria-hidden="true"></div>
+    <button class="icon-button sheet-close" type="button" data-close-sheet aria-label="Dialog schließen"><svg><use href="#i-close"></use></svg></button>
+    <div id="sheet-content"></div>
+  </dialog>
+
+  <dialog class="confirm-dialog" id="confirm-dialog" aria-labelledby="confirm-title">
+    <div class="confirm-mark">!</div>
+    <h2 id="confirm-title">Spielstand zurücksetzen?</h2>
+    <p>Dein Unternehmen, alle Käufe und abgeschlossenen Aufträge werden auf diesem Gerät gelöscht.</p>
+    <div><button class="secondary-action" type="button" data-cancel-reset>Abbrechen</button><button class="danger-action" type="button" data-confirm-reset>Alles löschen</button></div>
+  </dialog>
+
+  <div class="level-overlay" id="level-overlay" hidden>
+    <div><span>UNTERNEHMEN WÄCHST</span><strong id="level-overlay-number">LEVEL 2</strong><p id="level-overlay-unlock">Neue Aufträge freigeschaltet</p><button type="button" id="level-overlay-close">Weiterbauen</button></div>
+  </div>
+
+  <div class="install-banner" id="install-banner" hidden>
+    <div class="install-mark"><span></span><span></span><span></span></div>
+    <div><strong>Als App installieren</strong><span>Dein Bauhof direkt auf dem Startbildschirm.</span></div>
+    <button type="button" id="install-app">Installieren</button>
+    <button class="icon-button" type="button" id="dismiss-install" aria-label="Installationshinweis schließen"><svg><use href="#i-close"></use></svg></button>
+  </div>
+
+  <div class="toast-region" id="toast-region" role="status" aria-live="polite"></div>
+
+  <script type="module" src="/app.js"></script>
+</body>
+</html>
