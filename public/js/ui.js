@@ -5,6 +5,7 @@ import {
 import { getMaterialPrice, maintenancePrice } from './economy.js';
 import { getJobReadiness, jobProgress, jobRemaining } from './jobs.js';
 import { formatRemaining } from './timers.js';
+import { updateConstructionScene } from './scene.js';
 
 const $ = (selector, root = document) => root.querySelector(selector);
 const $$ = (selector, root = document) => [...root.querySelectorAll(selector)];
@@ -87,6 +88,7 @@ export function renderScene(state, now = Date.now()) {
     stage.dataset.progressStep = '0';
     idle.hidden = false;
     active.hidden = true;
+    updateConstructionScene(null, 0);
   } else {
     const progress = jobProgress(job, now);
     stage.dataset.status = 'active';
@@ -100,6 +102,7 @@ export function renderScene(state, now = Date.now()) {
     $('#active-job-bar').style.width = `${progress * 100}%`;
     $('#active-job-progress').textContent = `${Math.floor(progress * 100)} %`;
     $('#active-job-time').textContent = formatRemaining(jobRemaining(job, now));
+    updateConstructionScene(job, progress);
   }
 
   $('#stage-location').textContent = job ? `BAUFELD 01 · ${job.type.toUpperCase()}` : 'BAUFELD 01 · SÜDHANG';

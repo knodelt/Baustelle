@@ -1,4 +1,4 @@
-const CACHE_VERSION = 'bt-v1.0.0';
+const CACHE_VERSION = 'bt-v1.1.0';
 const APP_SHELL = [
   '/',
   '/index.html',
@@ -15,6 +15,7 @@ const APP_SHELL = [
   '/js/api.js',
   '/js/timers.js',
   '/js/ui.js',
+  '/js/scene.js',
   '/assets/icons/icon-192.png',
   '/assets/icons/icon-256.png',
   '/assets/icons/icon-512.png',
@@ -68,4 +69,3 @@ self.addEventListener('fetch', (event) => {
     }))
   );
 });
-
