@@ -913,6 +913,15 @@ html[data-theme="light"] .section-head h2 { color: #191c1f; }
 }
 
 @media (max-width: 559px) {
+  .toast-region {
+    top: auto;
+    bottom: calc(var(--mobile-nav-h) + env(safe-area-inset-bottom) + 12px);
+  }
+
+  .toast.is-leaving {
+    transform: translateY(8px);
+  }
+
   .view-heading { margin-bottom: 14px; }
   .view-heading h1 { font-size: 30px; }
   .construction-stage {

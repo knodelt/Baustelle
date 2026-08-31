@@ -1,5 +1,5 @@
 export const GAME_VERSION = 1;
-export const APP_VERSION = '1.0.0';
+export const APP_VERSION = '1.1.0';
 
 export const ECONOMY = Object.freeze({
   // Flüssiges Startkapital; die Startfahrzeuge sind bereits bezahlt.
