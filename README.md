@@ -23,8 +23,16 @@
 1. Dieses GitHub-Repository in Cloudflare Pages verbinden.
 2. Production Branch: `main`
 3. Framework Preset: `None`
-4. Build Command: `exit 0`
+4. Build Command: leer lassen oder `exit 0`
 5. Build Output Directory: `public`
+
+Bei einer normalen Pages-Git-Integration ist kein eigener Deploy-Befehl nötig. Falls die verwendete Cloudflare-Oberfläche ausdrücklich einen **Deploy command** verlangt, muss dort stehen:
+
+```bash
+npx wrangler pages deploy public --project-name=baustellentycoon --branch=main
+```
+
+Nicht `npx wrangler deploy` verwenden. Dieser Befehl ist für Cloudflare Workers gedacht und kann ein Pages-Projekt nicht korrekt veröffentlichen.
 
 Cloudflare veröffentlicht jeden neuen Commit auf `main` automatisch. Die Pages Functions unter `functions/` werden dabei gemeinsam mit der statischen Anwendung bereitgestellt.
 
@@ -33,7 +41,17 @@ Cloudflare veröffentlicht jeden neuen Commit auf `main` automatisch. Die Pages 
 1. Eine D1-Datenbank mit dem Namen `baustellentycoon-db` erstellen.
 2. Das Binding `DB` mit dieser Datenbank verbinden.
 3. `schema.sql` auf die Datenbank anwenden.
-4. In `wrangler.jsonc` den klar markierten Platzhalter `REPLACE_WITH_YOUR_D1_DATABASE_ID` durch die echte D1-Datenbank-ID ersetzen.
+4. Nach dem ersten erfolgreichen Pages-Deploy den folgenden Block mit der echten Datenbank-ID in `wrangler.jsonc` ergänzen:
+
+```jsonc
+"d1_databases": [
+  {
+    "binding": "DB",
+    "database_name": "baustellentycoon-db",
+    "database_id": "ECHTE_D1_DATABASE_ID"
+  }
+]
+```
 
 Beispiel mit Wrangler:
 
@@ -57,4 +75,3 @@ Pages Functions und D1 können optional über Wrangler getestet werden. Die eige
 ## Version
 
 Initiale Produktversion: `v1.0.0`
-
